@@ -3,12 +3,13 @@ import { ITableProps } from '../interfaces/table-props.interface';
 import Pagination from '@/app/common/components/Pagination';
 import TableHeader from './TableHeader';
 import TableRow from './TableRow';
+import { AUTH } from '@/app/constants/auth/auth';
 
 const TransactionsTable = ({ transactions, totalPages, getTransactions }: ITableProps) => {
   const [customPagination, setCustomPagination] = useState<number[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [rowsToShow] = useState<number>(transactions.length);
-  const [currentPublicKey] = useState<string | null>(localStorage.getItem('PUBLIC_KEY'));
+  const [currentPublicKey] = useState<string | null>(localStorage.getItem(AUTH.PUBLIC_KEY));
 
   const nextPage = () => {
     getTransactions(currentPage + 1);

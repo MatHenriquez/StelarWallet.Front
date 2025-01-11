@@ -3,6 +3,7 @@ import React from 'react';
 import brandIcon from '../../favicon.ico';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUser } from '@fortawesome/free-solid-svg-icons';
+import { CLIENT_ROUTES } from '@/app/constants/routes/front-routes';
 
 const Header = () => {
   return (
@@ -51,13 +52,13 @@ const Header = () => {
                 </ul>
               </li>
               <li>
-                <a href='/transactions' className='hover:bg-main-blue-500'>
+                <a href={CLIENT_ROUTES.TRANSACTIONS} className='hover:bg-main-blue-500'>
                   Transactions
                 </a>
               </li>
             </ul>
           </div>
-          <a href='/' className='btn btn-ghost text-2xl hover:bg-main-blue-500'>
+          <a href={CLIENT_ROUTES.HOME} className='btn btn-ghost text-2xl hover:bg-main-blue-500'>
             {' '}
             <Image src={brandIcon} alt='icon' height={48} /> Crippy
           </a>
@@ -83,7 +84,7 @@ const Header = () => {
               </details>
             </li>
             <li>
-              <a href='/transactions' className='hover:bg-main-blue-500'>Transactions</a>
+              <a href={CLIENT_ROUTES.TRANSACTIONS} className='hover:bg-main-blue-500'>Transactions</a>
             </li>
           </ul>
         </div>

@@ -1,8 +1,7 @@
 'use client';
 import React, { useEffect, useState } from 'react';
 import styles from './styles/page.module.css';
-import axiosInstance from '@/services/axios-instance';
-import { IBalance, IBalancesResponse } from './interfaces/balances-response.interface';
+import { IBalance } from './interfaces/balances-response.interface';
 import BalanceCard from './components/BalanceCard';
 import Pagination from './components/Pagination';
 import LoadingBalance from './components/LoadingBalance';
@@ -11,6 +10,10 @@ import GetTestBalances from './components/GetTestBalances';
 import { IPaymentPayload } from './interfaces/payment-payload.interface';
 import PaymentModal from './components/PaymentModal';
 import { IAsset } from '../auth/common/interfaces/asset.interface';
+import { AUTH } from '../constants/auth/auth';
+import useTestFunds from '../hooks/use-test-funds';
+import useBalances from '../hooks/use-balances';
+import useSendPayment from '../hooks/use-send-payment';
 
 const Page = () => {
   const [balances, setBalances] = useState<IBalance[]>([]);
@@ -18,110 +21,53 @@ const Page = () => {
   const [page, setPage] = useState<number>(1);
   const [totalPages, setTotalPages] = useState<number>(1);
   const [isLoading, setIsLoading] = useState<boolean>(true);
-  const FIXED_PAGE_SIZE = 4;
   const [isGettingTestBalances, setIsGettingTestBalances] = useState<boolean>(false);
   const [isTestnet] = useState<boolean>(process.env.NEXT_PUBLIC_HORIZON_NETWORK === 'testnet');
   const [isSendingPayment, setIsSendingPayment] = useState<boolean>(false);
   const [paymentAsset, setPaymentAsset] = useState<IAsset>({} as IAsset);
+  const getTestFunds = useTestFunds();
+  const getUserBalances = useBalances();
+  const sendPayment = useSendPayment();
 
   const getTestBalances = () => {
     setIsGettingTestBalances(true);
     toast.loading('Getting test balances...');
 
-    const publicKey = localStorage.getItem('PUBLIC_KEY');
+    const publicKey = localStorage.getItem(AUTH.PUBLIC_KEY);
 
-    axiosInstance
-      .post<IBalancesResponse>(
-        `/Transaction/TestFund`,
-        { PublicKey: publicKey },
-        { headers: { 'Content-Type': 'application/json' } },
-      )
-      .then(() => {
-        toast.dismiss();
-        toast.success('Test balances successfully added.', {
-          style: {
-            background: 'green',
-            color: 'white',
-          },
-        });
-        getBalances();
-      })
-      .catch((error) => {
-        toast.dismiss();
-        toast.error('An error occurred while getting test balances.', {
-          style: {
-            background: 'red',
-            color: 'white',
-          },
-        });
-        console.error(error);
-      })
-      .finally(() => {
-        setIsGettingTestBalances(false);
-      });
+    getTestFunds({
+      setIsGettingTestBalances,
+      getBalances,
+      publicKey: publicKey as string,
+    });
   };
 
   const getBalances = () => {
     setIsLoading(true);
-    const publicKey = localStorage.getItem('PUBLIC_KEY');
-    axiosInstance
-      .get<IBalancesResponse>(
-        `/Transaction/Balance?PublicKey=${publicKey}&FilterZeroBalances=${filterBalancesInZero}&PageNumber=${page}&PageSize=${FIXED_PAGE_SIZE}`,
-      )
-      .then((response) => {
-        setBalances(response.data.value?.balances ?? []);
-        setTotalPages(response.data.value?.totalPages ?? 1);
-      })
-      .catch((error) => {
-        console.error(error);
-        toast.error('An error occurred while fetching your balances.', {
-          style: {
-            background: 'red',
-            color: 'white',
-          },
-        });
-      })
-      .finally(() => {
-        setIsLoading(false);
-      });
+    toast.loading('Getting balances...');
+
+    const publicKey = localStorage.getItem(AUTH.PUBLIC_KEY);
+
+    getUserBalances({
+      publicKey: publicKey as string,
+      filterBalancesInZero,
+      page,
+      setBalances,
+      setTotalPages,
+      setIsLoading,
+    });
   };
 
-  const sendPayment = async (values: IPaymentPayload) => {
+  const handlePayment = async (values: IPaymentPayload) => {
     setIsSendingPayment(true);
-
     toast.loading('Sending payment...');
 
-    axiosInstance
-      .post('/Transaction/Payment', values)
-      .then(() => {
-        toast.dismiss();
-        getBalances();
-        toast.success('Payment sent successfully', {
-          position: 'top-right',
-          style: {
-            background: 'green',
-            color: 'white',
-          },
-        });
-      })
-      .catch((error) => {
-        toast.dismiss();
-        console.error(error?.response ?? error);
-        toast.error('There was an error sending your payment. Try again in a few minutes.', {
-          position: 'top-right',
-          style: {
-            background: 'red',
-            color: 'white',
-          },
-        });
-      })
-      .finally(() => {
-        setIsSendingPayment(false);
-        const dialog = document?.getElementById(
-          `payment-modal-${paymentAsset.code}`,
-        ) as HTMLDialogElement | null;
-        dialog?.close();
-      });
+    sendPayment({
+      setIsSendingPayment,
+      paymentPayload: values,
+      getBalances,
+      paymentAsset,
+    });
   };
 
   useEffect(() => {
@@ -135,7 +81,7 @@ const Page = () => {
         Balances
       </h2>
       <PaymentModal
-        sendPayment={sendPayment}
+        sendPayment={handlePayment}
         isSendingPayment={isSendingPayment}
         assetName={paymentAsset.code}
         assetIssuer={paymentAsset.issuer}

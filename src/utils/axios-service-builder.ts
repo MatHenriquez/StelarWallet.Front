@@ -1,6 +1,7 @@
 import axios, { AxiosInstance } from 'axios';
 import { REQUEST_HEADER_AUTH_KEY, TOKEN_TYPE } from '../constants/app-constants';
 import { IAxiosServiceBuilder } from './interfaces/axios-service-builder.interface';
+import { AUTH } from '@/app/constants/auth/auth';
 
 class AxiosServiceBuilder implements IAxiosServiceBuilder {
   private ApiBaseUrl = '';
@@ -29,7 +30,7 @@ class AxiosServiceBuilder implements IAxiosServiceBuilder {
     axiosInstance.defaults.headers['Content-Type'] = 'application/json';
 
     axiosInstance.interceptors.request.use((config) => {
-      const accessToken = localStorage.getItem('ACCESS_TOKEN');
+      const accessToken = localStorage.getItem(AUTH.ACCESS_TOKEN);
       config.headers[REQUEST_HEADER_AUTH_KEY] = `${TOKEN_TYPE} ${accessToken}`;
       return config;
     });

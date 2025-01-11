@@ -3,38 +3,27 @@ import React, { useEffect, useState } from 'react';
 import { toast, Toaster } from 'sonner';
 import styles from './styles/page.module.css';
 import { ITransaction } from './interfaces/transaction.interface';
-import axiosInstance from '@/services/axios-instance';
-import { ITransactionResponse } from './interfaces/transaction-response.interface';
 import TransactionsTable from './components/TransactionsTable';
+import { AUTH } from '../constants/auth/auth';
+import useTransactionHistory from '../hooks/use-transaction-history';
 
 const Transactions = () => {
   const [transactions, setTransactions] = useState<ITransaction[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [publicKey, setPublicKey] = useState<string | null>(null);
   const [totalPages, setTotalPages] = useState<number | undefined>();
+  const getUserTransactions = useTransactionHistory();
 
   const getTransactions = (pageNumber: number) => {
+    setIsLoading(true);
     toast.loading('Getting transactions...');
-    axiosInstance
-      .get<ITransactionResponse>(`/Transaction/Payment?pageNumber=${pageNumber}&pageSize=5`)
-      .then((response) => {
-        setTransactions(response.data.value.payments)
-        setTotalPages(response.data.value.totalPages);
-      })
-      .catch((error) => {
-        console.error(error);
-        toast.error('Failed to get transactions.', {
-          position: 'top-right',
-          style: {
-            background: 'red',
-            color: 'white',
-          },
-        });
-      })
-      .finally(() => {
-        toast.dismiss();
-        setIsLoading(false);
-      });
+
+    getUserTransactions({
+      setTransactions,
+      setTotalPages,
+      setIsLoading,
+      pageNumber,
+    });
   };
 
   useEffect(() => {
@@ -42,7 +31,7 @@ const Transactions = () => {
   }, [publicKey]);
 
   useEffect(() => {
-    const key = localStorage.getItem('PUBLIC_KEY');
+    const key = localStorage.getItem(AUTH.PUBLIC_KEY);
     setPublicKey(key);
   }, []);
 

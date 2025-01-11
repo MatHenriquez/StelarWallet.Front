@@ -7,14 +7,18 @@ import { NewUserSchema } from '../utils/NewUserSchema';
 import { EmailIcon } from '../../common/components/icons/email';
 import { NameIcon } from '../../common/components/icons/names';
 import { KeyIcon } from '../../common/components/icons/key';
-import axiosInstance from '@/services/axios-instance';
 import { Toaster, toast } from 'sonner';
 import { CreateUserRequest } from '../utils/create-user-request';
 import { initialValues } from '../utils/constants';
 import SubmitButton from '../../common/components/SubmitButton';
 import SwapAuthLink from '../../common/components/SwapAuthLink';
+import { CLIENT_ROUTES } from '@/app/constants/routes/front-routes';
+import useSignup from '@/app/hooks/use-signup';
 
 const SignUpForm = () => {
+  const signUp = useSignup();
+  const LOADING_DELAY = 500;
+
   return (
     <>
       <Toaster position='top-right' data-cy='toast' />
@@ -27,7 +31,7 @@ const SignUpForm = () => {
             new Promise<void>((resolve) => {
               setTimeout(() => {
                 resolve();
-              }, 500);
+              }, LOADING_DELAY);
             }),
             {
               loading: 'Creating account...',
@@ -47,28 +51,8 @@ const SignUpForm = () => {
           }
 
           const requestPayload = new CreateUserRequest(requestValues);
-          axiosInstance
-            .post('/User', requestPayload)
-            .then(() => {
-              toast.success('Account created successfully!', {
-                style: {
-                  background: 'green',
-                  color: 'white',
-                },
-              });
-            })
-            .catch((error) => {
-              console.error(error);
-              toast.error('Error creating account.', {
-                style: {
-                  background: 'red',
-                  color: 'white',
-                },
-              });
-            })
-            .finally(() => {
-              setSubmitting(false);
-            });
+          
+          signUp({ userSignupRequest: requestPayload, setSubmitting });
         }}
       >
         {({ values, errors, touched, handleChange, handleBlur, handleSubmit, isSubmitting }) => (
@@ -78,7 +62,7 @@ const SignUpForm = () => {
             </p>
             <SwapAuthLink
               name='login'
-              link='/auth/login'
+              link={CLIENT_ROUTES.AUTH.LOGIN}
               description='Already have an account?'
               text='Login'
             />

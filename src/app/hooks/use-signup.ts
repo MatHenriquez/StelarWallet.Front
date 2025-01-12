@@ -5,6 +5,7 @@ import { API_ROUTES } from '../constants/routes/api-routes';
 import successToast from './toasts/success-toast';
 import errorToast from './toasts/error-toast';
 import { CLIENT_ROUTES } from '../constants/routes/front-routes';
+import { toast } from 'sonner';
 
 interface IUseSignUpProps {
   userSignupRequest: CreateUserRequest;
@@ -23,10 +24,12 @@ const useSignup = () => {
     axiosInstance
       .post(API_ROUTES.USER, signupRequest)
       .then(() => {
+        toast.dismiss();
         successToast(TOAST_MESSAGES.SUCCESS);
       })
       .catch((error) => {
         console.error(error);
+        toast.dismiss();
         errorToast(error, TOAST_MESSAGES.ERROR);
         setTimeout(() => {
           router.push(CLIENT_ROUTES.AUTH.LOGIN);

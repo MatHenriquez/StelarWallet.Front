@@ -1,11 +1,21 @@
+'use client';
+
 import Image from 'next/image';
 import React from 'react';
 import brandIcon from '../../favicon.ico';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUser } from '@fortawesome/free-solid-svg-icons';
 import { CLIENT_ROUTES } from '@/app/constants/routes/front-routes';
+import { useRouter } from 'next/navigation';
 
 const Header = () => {
+  const router = useRouter();
+
+  const handleLogout = () => {
+    localStorage.clear();
+    router.push(CLIENT_ROUTES.AUTH.LOGIN);
+  };
+
   return (
     <header data-cy='header'>
       <div className='navbar bg-main-blue-200 text-main-blue-900'>
@@ -84,7 +94,9 @@ const Header = () => {
               </details>
             </li>
             <li>
-              <a href={CLIENT_ROUTES.TRANSACTIONS} className='hover:bg-main-blue-500'>Transactions</a>
+              <a href={CLIENT_ROUTES.TRANSACTIONS} className='hover:bg-main-blue-500'>
+                Transactions
+              </a>
             </li>
           </ul>
         </div>
@@ -94,9 +106,10 @@ const Header = () => {
               tabIndex={0}
               role='button'
               className='avatar btn btn-circle btn-ghost hover:bg-main-blue-400'
+              data-cy='avatar-button'
             >
               <div className='flex w-10 place-content-center rounded-full border-2 border-main-blue-900'>
-                <FontAwesomeIcon className='w-8 pl-1' icon={faUser} />
+                <FontAwesomeIcon className='' icon={faUser} />
               </div>
             </div>
             <ul className='menu dropdown-content menu-sm z-[1] mt-3 w-52 rounded-box bg-base-100 bg-main-blue-200 shadow'>
@@ -106,7 +119,9 @@ const Header = () => {
                 </a>
               </li>
               <li>
-                <button className='hover:bg-main-blue-500'>Logout</button>
+                <button className='hover:bg-main-blue-500' onClick={handleLogout} data-cy='logout-button'>
+                  Logout
+                </button>
               </li>
             </ul>
           </div>

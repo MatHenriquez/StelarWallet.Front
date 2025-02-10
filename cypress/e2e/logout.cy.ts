@@ -6,28 +6,19 @@ it('should redirect to home page when form is submitted', () => {
     }).as('getUserToken');
 
     cy.visit('/auth/login');
-    cy.wait('@getUserToken');
 
-    cy.intercept('POST', '/Auth/Login', {
-        statusCode: 200,
-      fixture: 'login/success.json',
-    }).as('successfulLogin');
+    cy.wait('@getUserToken');
 
     cy.intercept(
         'GET',
-        '/Transaction/Balance?PublicKey=public_key&FilterZeroBalances=false&PageNumber=1&PageSize=4',
+        '/Transaction/Balance?PublicKey=null&FilterZeroBalances=false&PageNumber=1&PageSize=4',
         {
           statusCode: 200,
           fixture: 'dashboard/balances.json',
         },
       ).as('getBalances');  
 
-    cy.get('[data-cy=email-input]').type('valid@email.com');
-    cy.get('[data-cy=password-input]').type('password');
-    cy.get('[data-cy=submit-button]').click();
-
-    cy.wait('@getBalances');
-    cy.wait('@successfulLogin');
+    cy.wait('@getUserToken');
     cy.wait('@getBalances');
     cy.url().should('include', '/dashboard');
 

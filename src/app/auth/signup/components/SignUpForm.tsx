@@ -12,6 +12,7 @@ import SwapAuthLink from '../../common/components/SwapAuthLink';
 import { CLIENT_ROUTES } from '@/app/constants/routes/front-routes';
 import useSignup from '@/app/hooks/use-signup';
 import { signupFormFields } from '../utils/signup-form-fields';
+import OptionalKeysMessage from './OptionalKeysMessage';
 
 const SignUpForm = () => {
   const signUp = useSignup();
@@ -79,12 +80,9 @@ const SignUpForm = () => {
                 icon={icon}
               />
             ))}
-            <p className={styles.optionalTitle} data-cy='optional-title'>
-              *Optional{' '}
-              <span className={styles.optionalSubtitle}>
-                (if you don&apos;t have Stellar keys, we will create them for you!)
-              </span>
-            </p>
+
+            <OptionalKeysMessage />
+
             {signupFormFields.slice(5).map(({ name, type, label, icon }) => (
               <AuthFormInput
                 key={name}

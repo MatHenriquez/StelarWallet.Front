@@ -13,10 +13,41 @@ import { CLIENT_ROUTES } from '@/app/constants/routes/front-routes';
 import useSignup from '@/app/hooks/use-signup';
 import { signupFormFields } from '../utils/signup-form-fields';
 import OptionalKeysMessage from './OptionalKeysMessage';
+import { IUser } from '@/models/user';
 
 const SignUpForm = () => {
   const signUp = useSignup();
   const LOADING_DELAY = 500;
+
+  const handleSubmit = (values: IUser, setSubmitting: (isSubmitting: boolean) => void) => {
+    setSubmitting(true);
+    toast.promise(
+      new Promise<void>((resolve) => {
+        setTimeout(() => {
+          resolve();
+        }, LOADING_DELAY);
+      }),
+      {
+        loading: 'Creating account...',
+      },
+    );
+
+    const requestValues: CreateUserRequest = {
+      name: values.name,
+      lastName: values.lastName,
+      email: values.email,
+      password: values.password,
+    };
+
+    if (values.publicKey && values.secretKey) {
+      requestValues.publicKey = values.publicKey;
+      requestValues.secretKey = values.secretKey;
+    }
+
+    const requestPayload = new CreateUserRequest(requestValues);
+
+    signUp({ userSignupRequest: requestPayload, setSubmitting });
+  };
 
   return (
     <>
@@ -24,35 +55,7 @@ const SignUpForm = () => {
       <Formik
         initialValues={initialValues}
         validationSchema={NewUserSchema}
-        onSubmit={(values, { setSubmitting }) => {
-          setSubmitting(true);
-          toast.promise(
-            new Promise<void>((resolve) => {
-              setTimeout(() => {
-                resolve();
-              }, LOADING_DELAY);
-            }),
-            {
-              loading: 'Creating account...',
-            },
-          );
-
-          const requestValues: CreateUserRequest = {
-            name: values.name,
-            lastName: values.lastName,
-            email: values.email,
-            password: values.password,
-          };
-
-          if (values.publicKey && values.secretKey) {
-            requestValues.publicKey = values.publicKey;
-            requestValues.secretKey = values.secretKey;
-          }
-
-          const requestPayload = new CreateUserRequest(requestValues);
-
-          signUp({ userSignupRequest: requestPayload, setSubmitting });
-        }}
+        onSubmit={(values, { setSubmitting }) => handleSubmit(values, setSubmitting)}
       >
         {({ values, errors, touched, handleChange, handleBlur, handleSubmit, isSubmitting }) => (
           <form className={styles.form} onSubmit={handleSubmit} data-cy='signup-form'>

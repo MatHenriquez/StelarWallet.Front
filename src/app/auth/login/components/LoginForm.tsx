@@ -7,11 +7,10 @@ import { LoginInitialValues, LoginRequest } from '../utils/constants';
 import { LoginUserSchema } from '../utils/login-user-schema';
 import styles from '../styles/LoginForm.module.css';
 import AuthFormInput from '../../common/components/AuthFormInput';
-import { EmailIcon } from '../../common/components/icons/email';
-import { KeyIcon } from '../../common/components/icons/key';
 import SubmitButton from '../../common/components/SubmitButton';
 import SwapAuthLink from '../../common/components/SwapAuthLink';
 import useLogin from '@/app/hooks/use-login';
+import { loginFormFields } from '../utils/form-fields';
 
 const LoginForm = () => {
   const login = useLogin();
@@ -53,29 +52,21 @@ const LoginForm = () => {
               description='Don’t have an account?'
               text='Sign up'
             />
-            <AuthFormInput
-              type='email'
-              name='email'
-              handleChange={handleChange}
-              handleBlur={handleBlur}
-              error={errors.email}
-              value={values.email}
-              touched={touched.email}
-              label='Email'
-              icon={EmailIcon}
-            />
 
-            <AuthFormInput
-              type='password'
-              name='password'
-              handleChange={handleChange}
-              handleBlur={handleBlur}
-              error={errors.password}
-              value={values.password}
-              touched={touched.password}
-              label='Password'
-              icon={KeyIcon}
-            />
+            {loginFormFields.map(({ name, type, label, icon }) => (
+              <AuthFormInput
+                key={name}
+                type={type}
+                name={name}
+                handleChange={handleChange}
+                handleBlur={handleBlur}
+                error={errors[name as keyof typeof errors]}
+                value={values[name as keyof typeof values]}
+                touched={touched[name as keyof typeof touched]}
+                label={label}
+                icon={icon}
+              />
+            ))}
 
             <SubmitButton isSubmitting={isSubmitting} />
           </form>

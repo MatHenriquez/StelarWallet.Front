@@ -1,6 +1,6 @@
 import React, { ReactNode } from 'react';
 import styles from './layout.module.css';
-import Header from '../header/components/Header';
+import Header from '../common/components/Header';
 
 interface ITransactionsLayout {
   children: ReactNode;

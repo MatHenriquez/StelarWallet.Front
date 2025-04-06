@@ -26,14 +26,17 @@ const useSignup = () => {
       .then(() => {
         toast.dismiss();
         successToast(TOAST_MESSAGES.SUCCESS);
+        setTimeout(() => {
+          router.push(CLIENT_ROUTES.AUTH.LOGIN);
+        }, DELAY);
       })
       .catch((error) => {
         console.error(error);
         toast.dismiss();
-        errorToast(error, TOAST_MESSAGES.ERROR);
-        setTimeout(() => {
-          router.push(CLIENT_ROUTES.AUTH.LOGIN);
-        }, DELAY);
+
+        const apiErrorMessage = error.response?.data?.message || TOAST_MESSAGES.ERROR;
+
+        errorToast(error, apiErrorMessage);
       })
       .finally(() => {
         setSubmitting(false);

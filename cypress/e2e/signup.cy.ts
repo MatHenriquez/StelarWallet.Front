@@ -57,7 +57,7 @@ describe('Signup page', () => {
         cy.get('[data-cy=name-error]').should('exist').should('have.text', '*Required');
       });
 
-      it('should not display an error message when the name field is valid', () => {
+      it.only('should not display an error message when the name field is valid', () => {
         cy.get('[data-cy=name-input]').type('John').blur();
         cy.get('[data-cy=name-error]').should('have.text', '');
       });

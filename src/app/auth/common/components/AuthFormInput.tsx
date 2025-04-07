@@ -1,17 +1,17 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import React, { ChangeEvent } from 'react';
+
+import React, { ChangeEvent, useState } from 'react';
 import styles from '../styles/AuthFormInput.module.css';
 
 type AuthFormInputProps = {
   handleChange: {
-    (e: ChangeEvent<any>): void;
-    <T = string | ChangeEvent<any>>(
+    (e: ChangeEvent<HTMLInputElement>): void;
+    <T = string | ChangeEvent<unknown>>(
       field: T,
-    ): T extends ChangeEvent<any> ? void : (e: string | ChangeEvent<any>) => void;
+    ): T extends ChangeEvent<unknown> ? void : (e: string | ChangeEvent<unknown>) => void;
   };
   handleBlur: {
-    (e: React.FocusEvent<any>): void;
-    <T = any>(fieldOrEvent: T): T extends string ? (e: any) => void : void;
+    (e: React.FocusEvent<HTMLInputElement>): void;
+    <T = unknown>(fieldOrEvent: T): T extends string ? (e: unknown) => void : void;
   };
   value?: string;
   error: string | undefined;
@@ -35,26 +35,50 @@ const AuthFormInput = ({
   label,
   placeholder,
 }: AuthFormInputProps) => {
+  const [isFocused, setIsFocused] = useState(false);
+
+  const handleFocus = () => {
+    setIsFocused(true);
+  };
+
+  const handleInputBlur = (e: React.FocusEvent<HTMLInputElement>) => {
+    handleBlur(e);
+    if (!value) {
+      setIsFocused(false);
+    }
+  };
+
+  const isActive = isFocused || !!value;
+
   return (
-    <label className={styles.label} data-cy={`${name}-label`}>
-      <span className={styles.span} data-cy={`${name}-span`}>
-        {icon}
-        {label + ':'}
-        <input
-          className={styles.input}
-          type={type}
-          name={name}
-          onChange={handleChange}
-          onBlur={handleBlur}
-          value={value}
-          placeholder={placeholder}
-          data-cy={`${name}-input`}
-        />{' '}
-      </span>
-      <span className={styles.errorMessage} data-cy={`${name}-error`}>
-        {error && touched && error}
-      </span>
-    </label>
+    <div className={styles.formField} data-cy={`${name}-field`}>
+        <div className={styles.inputWrapper}>
+          <input
+            className={styles.input}
+            type={type}
+            name={name}
+            id={name}
+            onChange={handleChange}
+            onFocus={handleFocus}
+            onBlur={handleInputBlur}
+            value={value}
+            placeholder={isActive ? placeholder : ''}
+            data-cy={`${name}-input`}
+          />
+          <label
+            htmlFor={name}
+            className={`${styles.floatingLabel} ${isActive ? styles.active : ''}`}
+            data-cy={`${name}-label`}
+          >
+            <div className='flex'>{icon}{label}</div>
+          </label>
+          {error && touched && (
+            <div className={styles.errorMessage} data-cy={`${name}-error`}>
+              {error}
+            </div>
+          )}
+        </div>
+    </div>
   );
 };
 

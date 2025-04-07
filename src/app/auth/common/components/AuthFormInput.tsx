@@ -1,4 +1,3 @@
-
 import React, { ChangeEvent, useState } from 'react';
 import styles from '../styles/AuthFormInput.module.css';
 
@@ -52,32 +51,35 @@ const AuthFormInput = ({
 
   return (
     <div className={styles.formField} data-cy={`${name}-field`}>
-        <div className={styles.inputWrapper}>
-          <input
-            className={styles.input}
-            type={type}
-            name={name}
-            id={name}
-            onChange={handleChange}
-            onFocus={handleFocus}
-            onBlur={handleInputBlur}
-            value={value}
-            placeholder={isActive ? placeholder : ''}
-            data-cy={`${name}-input`}
-          />
-          <label
-            htmlFor={name}
-            className={`${styles.floatingLabel} ${isActive ? styles.active : ''}`}
-            data-cy={`${name}-label`}
-          >
-            <div className='flex'>{icon}{label}</div>
-          </label>
-          {error && touched && (
-            <div className={styles.errorMessage} data-cy={`${name}-error`}>
-              {error}
-            </div>
-          )}
-        </div>
+      <div className={styles.inputWrapper}>
+        <input
+          className={styles.input}
+          type={type}
+          name={name}
+          id={name}
+          onChange={handleChange}
+          onFocus={handleFocus}
+          onBlur={handleInputBlur}
+          value={value}
+          placeholder={isActive ? placeholder : ''}
+          data-cy={`${name}-input`}
+        />
+        <label
+          htmlFor={name}
+          className={`${styles.floatingLabel} ${isActive ? styles.active : ''}`}
+          data-cy={`${name}-label`}
+        >
+          <div className='flex'>
+            {icon}
+            {label}
+          </div>
+        </label>
+        {error && touched && error.trim() !== '' && (
+          <div className={styles.errorMessage} data-cy={`${name}-error`}>
+            {error}
+          </div>
+        )}
+      </div>
     </div>
   );
 };

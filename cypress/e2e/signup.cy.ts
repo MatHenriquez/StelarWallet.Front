@@ -25,27 +25,27 @@ describe('Signup page', () => {
 
     it('should display the signup form with the correct fields', () => {
       cy.get('[data-cy=name-input]').should('exist');
-      cy.get('[data-cy=name-label]').should('contain.text', 'Name:');
+      cy.get('[data-cy=name-label]').should('contain.text', 'Name');
 
       cy.get('[data-cy=lastName-input]').should('exist');
-      cy.get('[data-cy=lastName-label]').should('contain.text', 'Surname:');
+      cy.get('[data-cy=lastName-label]').should('contain.text', 'Surname');
 
       cy.get('[data-cy=email-input]').should('exist');
-      cy.get('[data-cy=email-label]').should('contain.text', 'Email:');
+      cy.get('[data-cy=email-label]').should('contain.text', 'Email');
 
       cy.get('[data-cy=password-input]').should('exist');
-      cy.get('[data-cy=password-label]').should('contain.text', 'Password:');
+      cy.get('[data-cy=password-label]').should('contain.text', 'Password');
 
       cy.get('[data-cy=confirmPassword-input]').should('exist');
-      cy.get('[data-cy=confirmPassword-label]').should('contain.text', 'Confirm Password:');
+      cy.get('[data-cy=confirmPassword-label]').should('contain.text', 'Confirm Password');
 
       cy.get('[data-cy=optional-title]').should('contain.text', '*Optional');
 
       cy.get('[data-cy=publicKey-input]').should('exist');
-      cy.get('[data-cy=publicKey-label]').should('contain.text', 'Public Key:');
+      cy.get('[data-cy=publicKey-label]').should('contain.text', 'Public Key');
 
       cy.get('[data-cy=secretKey-input]').should('exist');
-      cy.get('[data-cy=secretKey-label]').should('contain.text', 'Secret Key:');
+      cy.get('[data-cy=secretKey-label]').should('contain.text', 'Secret Key');
     });
   });
 

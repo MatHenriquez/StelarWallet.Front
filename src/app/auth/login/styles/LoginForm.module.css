@@ -21,3 +21,15 @@
   font-size: xx-large;
 }
 
+@media (max-width: 768px) {
+  .form {
+    width: 90%;
+    padding: 1.5rem 1rem;
+    font-size: 3rem;
+  }
+
+  .signInTitle {
+    margin-bottom: 1rem;
+    font-size: large;
+  }
+}

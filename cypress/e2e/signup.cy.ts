@@ -25,27 +25,27 @@ describe('Signup page', () => {
 
     it('should display the signup form with the correct fields', () => {
       cy.get('[data-cy=name-input]').should('exist');
-      cy.get('[data-cy=name-label]').should('contain.text', 'Name:');
+      cy.get('[data-cy=name-label]').should('contain.text', 'Name');
 
       cy.get('[data-cy=lastName-input]').should('exist');
-      cy.get('[data-cy=lastName-label]').should('contain.text', 'Surname:');
+      cy.get('[data-cy=lastName-label]').should('contain.text', 'Surname');
 
       cy.get('[data-cy=email-input]').should('exist');
-      cy.get('[data-cy=email-label]').should('contain.text', 'Email:');
+      cy.get('[data-cy=email-label]').should('contain.text', 'Email');
 
       cy.get('[data-cy=password-input]').should('exist');
-      cy.get('[data-cy=password-label]').should('contain.text', 'Password:');
+      cy.get('[data-cy=password-label]').should('contain.text', 'Password');
 
       cy.get('[data-cy=confirmPassword-input]').should('exist');
-      cy.get('[data-cy=confirmPassword-label]').should('contain.text', 'Confirm Password:');
+      cy.get('[data-cy=confirmPassword-label]').should('contain.text', 'Confirm Password');
 
       cy.get('[data-cy=optional-title]').should('contain.text', '*Optional');
 
       cy.get('[data-cy=publicKey-input]').should('exist');
-      cy.get('[data-cy=publicKey-label]').should('contain.text', 'Public Key:');
+      cy.get('[data-cy=publicKey-label]').should('contain.text', 'Public Key');
 
       cy.get('[data-cy=secretKey-input]').should('exist');
-      cy.get('[data-cy=secretKey-label]').should('contain.text', 'Secret Key:');
+      cy.get('[data-cy=secretKey-label]').should('contain.text', 'Secret Key');
     });
   });
 
@@ -59,7 +59,7 @@ describe('Signup page', () => {
 
       it('should not display an error message when the name field is valid', () => {
         cy.get('[data-cy=name-input]').type('John').blur();
-        cy.get('[data-cy=name-error]').should('have.text', '');
+        cy.get('[data-cy=name-error]').should('not.exist');
       });
 
       it('should display an error message when the name is to short', () => {
@@ -87,7 +87,7 @@ describe('Signup page', () => {
 
       it('should not display an error message when the last name field is touched and then blurred with a value', () => {
         cy.get('[data-cy=lastName-input]').type('Doe').blur();
-        cy.get('[data-cy=lastName-error]').should('have.text', '');
+        cy.get('[data-cy=lastName-error]').should('not.exist');
       });
 
       it('should display an error message when the last name is to short', () => {
@@ -115,7 +115,7 @@ describe('Signup page', () => {
 
       it('should not display an error message when the email field is touched and then blurred with a value', () => {
         cy.get('[data-cy=email-input]').type('mail@mail.com').blur();
-        cy.get('[data-cy=email-error]').should('have.text', '');
+        cy.get('[data-cy=email-error]').should('not.exist');
       });
 
       it('should display an error message when the email is invalid', () => {
@@ -133,7 +133,7 @@ describe('Signup page', () => {
 
       it('should not display an error message when the password field is touched and then blurred with a value', () => {
         cy.get('[data-cy=password-input]').type('password12D@').blur();
-        cy.get('[data-cy=password-error]').should('have.text', '');
+        cy.get('[data-cy=password-error]').should('not.exist');
       });
 
       it('should display an error message when the password is invalid', () => {
@@ -165,7 +165,7 @@ describe('Signup page', () => {
       it('should not display an error message when the confirm password field has the same value than the password input', () => {
         cy.get('[data-cy=password-input]').type('myPass123@').blur();
         cy.get('[data-cy=confirmPassword-input]').type('myPass123@').blur();
-        cy.get('[data-cy=confirmPassword-error]').should('have.text', '');
+        cy.get('[data-cy=confirmPassword-error]').should('not.exist');
       });
 
       it('should display an error message when the confirm password is invalid', () => {
@@ -181,7 +181,7 @@ describe('Signup page', () => {
         cy.get('[data-cy=publicKey-input]')
           .type('GDZX2C2A4CMPSACVZNXI63X2CWINPBZDKBPGI2CHNJ4KRLMZHLSD5DGZ')
           .blur();
-        cy.get('[data-cy=publicKey-error]').should('have.text', '');
+        cy.get('[data-cy=publicKey-error]').should('not.exist');
       });
 
       it('should display an error message when the public key field is touched and then blurred with a value with 55 characters', () => {
@@ -204,7 +204,7 @@ describe('Signup page', () => {
         cy.get('[data-cy=secretKey-input]')
           .type('SDZX2C2A4CMPSACVZNXI63X2CWINPBZDKBPGI2CHNJ4KRLMZHLSD5DGZ')
           .blur();
-        cy.get('[data-cy=secretKey-error]').should('have.text', '');
+        cy.get('[data-cy=secretKey-error]').should('not.exist');
       });
 
       it('should display an error message when the secret key field is touched and then blurred with a value with 55 characters', () => {

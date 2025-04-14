@@ -27,6 +27,8 @@ describe('Dashboard', () => {
         },
       ).as('getBalances');
 
+      cy.wait('@getBalances');
+
       cy.get('[data-cy=filter-balances]').should('exist');
     });
 
@@ -39,6 +41,9 @@ describe('Dashboard', () => {
           fixture: 'dashboard/balances.json',
         },
       ).as('getBalances');
+
+      cy.wait('@getBalances');
+
       cy.get('[data-cy=balances-pagination]').should('exist');
     });
 
@@ -70,7 +75,6 @@ describe('Dashboard', () => {
         },
       ).as('getNoBalances');
 
-      cy.wait('@getNoBalances');
       cy.get('[data-cy=no-balances-message]')
         .should('exist')
         .should('have.text', "You don't have any balance yet.");
@@ -86,7 +90,6 @@ describe('Dashboard', () => {
         },
       ).as('getNoBalances');
 
-      cy.wait('@getNoBalances');
       cy.get('[data-cy=get-test-balances]').should('exist');
     });
 
@@ -99,8 +102,6 @@ describe('Dashboard', () => {
           fixture: 'dashboard/no-balances.json',
         },
       ).as('getNoBalances');
-
-      cy.wait('@getNoBalances');
 
       cy.intercept('POST', '/Transaction/TestFund', {
         statusCode: 200,
@@ -142,7 +143,6 @@ describe('Dashboard', () => {
         },
       ).as('getNoBalances');
 
-      cy.wait('@getNoBalances');
       cy.get('[data-cy=balances-pagination]').should('not.exist');
     });
   });
@@ -157,6 +157,8 @@ describe('Dashboard', () => {
           fixture: 'dashboard/balances.json',
         },
       ).as('getBalances');
+
+      cy.wait('@getBalances');
 
       cy.intercept(
         'GET',
@@ -184,6 +186,8 @@ describe('Dashboard', () => {
         },
       ).as('getBalances');
 
+      cy.wait('@getBalances');
+
       cy.get('[data-cy=prev-button]').should('be.disabled');
     });
 
@@ -197,6 +201,8 @@ describe('Dashboard', () => {
         },
       ).as('getBalances');
 
+      cy.wait('@getBalances');
+
       cy.get('[data-cy=next-button]').should('be.disabled');
     });
 
@@ -209,6 +215,8 @@ describe('Dashboard', () => {
           fixture: 'dashboard/balances.json',
         },
       ).as('getBalances');
+
+      cy.wait('@getBalances');
 
       cy.get('[data-cy=current-page]').should('have.text', 'Page 1 of 1');
     });
@@ -225,6 +233,8 @@ describe('Dashboard', () => {
         },
       ).as('getBalances');
 
+      cy.wait('@getBalances');
+
       cy.get('[data-cy=eth-send-payment-button]').click();
 
       cy.get('[data-cy=payment-modal-eth]').should('exist');
@@ -239,6 +249,8 @@ describe('Dashboard', () => {
           fixture: 'dashboard/balances.json',
         },
       ).as('getBalances');
+
+      cy.wait('@getBalances');
 
       cy.get('[data-cy=balance-card-eth]').within(() => {
         cy.get('[data-cy=eth-send-payment-button]').click();
@@ -258,6 +270,8 @@ describe('Dashboard', () => {
           fixture: 'dashboard/balances.json',
         },
       ).as('getBalances');
+
+      cy.wait('@getBalances');
 
       cy.get('[data-cy=eth-send-payment-button]').click();
 
@@ -279,6 +293,8 @@ describe('Dashboard', () => {
           fixture: 'dashboard/balances.json',
         },
       ).as('getBalances');
+
+      cy.wait('@getBalances');
 
       cy.get('[data-cy=eth-send-payment-button]').click();
 
@@ -328,6 +344,8 @@ describe('Dashboard', () => {
           fixture: 'dashboard/balances.json',
         },
       ).as('getBalances');
+
+      cy.wait('@getBalances');
 
       cy.intercept('POST', '/Transaction/Payment', {
         statusCode: 200,

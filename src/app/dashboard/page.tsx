@@ -92,7 +92,7 @@ const Page = () => {
         ) : (
           <>
             {balances.length > 0 ? (
-              <>
+              <div className='flex items-center justify-between bg-main-blue-200 p-2 rounded-lg border-main-blue-950 border-2 text-main-blue-950'>
                 <input
                   id='filter-balances'
                   type='checkbox'
@@ -100,10 +100,10 @@ const Page = () => {
                   onChange={() => setFilterBalancesInZero(!filterBalancesInZero)}
                   data-cy='filter-balances'
                 />
-                <label htmlFor='filter-balances' className='p-2 text-sm'>
+                <label htmlFor='filter-balances' className='p-2 text-sm bg-main'>
                   Filter balances in zero
                 </label>
-              </>
+              </div>
             ) : (
               <div className={styles.noBalancesSection}>
                 <p data-cy='no-balances-message'>You don&apos;t have any balance yet.</p>

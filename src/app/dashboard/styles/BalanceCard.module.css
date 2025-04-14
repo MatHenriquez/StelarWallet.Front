@@ -1,28 +1,38 @@
 .container {
-    @apply card lg:w-80 lg:h-52 bg-main-blue-950 opacity-90 shadow-md shadow-main-blue-400 w-96 h-40;
+  @apply card relative max-h-40 max-w-64 rounded-lg border-2 border-solid border-main-blue-900 bg-gradient-to-r from-main-blue-100 to-main-blue-400 text-main-blue-950 opacity-90 shadow-md shadow-main-blue-400 lg:h-52 lg:w-80;
 }
 
 .cardBody {
-    @apply card-body;
-    word-wrap: break-word;
+  @apply card-body;
+  word-wrap: break-word;
 }
 
 .cardAction {
-    position: absolute;
-    top: 0.5rem;
-    right: 0.5rem;
+  @apply absolute right-2 top-6;
 }
 
 .cardButton {
-    @apply btn btn-primary bg-main-blue-400 hover:bg-main-blue-200 text-main-blue-950 font-bold border-main-blue-800
+  @apply btn btn-primary border-main-blue-800 bg-main-blue-950 font-bold text-main-blue-100 hover:bg-main-blue-200 hover:text-main-blue-950;
 }
 
 .issuer {
-    @apply text-sm;
+  @apply text-sm font-bold;
+}
+
+.asset {
+  @apply mb-2 text-3xl font-bold;
+}
+
+.amount {
+  @apply text-xl font-bold;
 }
 
 @media (max-width: 1200px) {
-    .cardAction {
-        top: 1.5rem;
-    }
+  .cardAction {
+    top: 1.5rem;
+  }
+
+  .container {
+    @apply min-w-80;
+  }
 }

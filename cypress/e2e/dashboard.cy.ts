@@ -2,6 +2,15 @@ describe('Dashboard', () => {
   beforeEach(() => {
     cy.visit('/dashboard');
 
+    cy.intercept(
+      'GET',
+      '/Transaction/Balance?PublicKey=null&FilterZeroBalances=false&PageNumber=1&PageSize=8',
+      {
+        statusCode: 200,
+        fixture: 'dashboard/balances.json',
+      },
+    ).as('getBalances');
+
     cy.intercept('GET', '/Auth/UserToken', {
       statusCode: 200,
       fixture: 'dashboard/auth-token.json',
@@ -18,28 +27,11 @@ describe('Dashboard', () => {
     });
 
     it('should display the filter balances checkbox', () => {
-      cy.intercept(
-        'GET',
-        '/Transaction/Balance?PublicKey=null&FilterZeroBalances=false&PageNumber=1&PageSize=8',
-        {
-          statusCode: 200,
-          fixture: 'dashboard/balances.json',
-        },
-      ).as('getBalances');
-
+      cy.wait('@getBalances');
       cy.get('[data-cy=filter-balances]').should('exist');
     });
 
     it('should display the pagination', () => {
-      cy.intercept(
-        'GET',
-        '/Transaction/Balance?PublicKey=null&FilterZeroBalances=false&PageNumber=1&PageSize=8',
-        {
-          statusCode: 200,
-          fixture: 'dashboard/balances.json',
-        },
-      ).as('getBalances');
-
       cy.get('[data-cy=balances-pagination]').should('exist');
     });
 
@@ -48,17 +40,7 @@ describe('Dashboard', () => {
     });
 
     it('should display the balances', () => {
-      cy.intercept(
-        'GET',
-        '/Transaction/Balance?PublicKey=null&FilterZeroBalances=false&PageNumber=1&PageSize=8',
-        {
-          statusCode: 200,
-          fixture: 'dashboard/balances.json',
-        },
-      ).as('getBalances');
-
       cy.wait('@getBalances');
-
       cy.get('[data-cy=balance-card-btc]').should('exist');
       cy.get('[data-cy=balance-card-eth]').should('exist');
     });
@@ -73,6 +55,8 @@ describe('Dashboard', () => {
         },
       ).as('getNoBalances');
 
+      cy.visit('/dashboard');
+
       cy.get('[data-cy=no-balances-message]')
         .should('exist')
         .should('have.text', "You don't have any balance yet.");
@@ -83,10 +67,12 @@ describe('Dashboard', () => {
         'GET',
         '/Transaction/Balance?PublicKey=null&FilterZeroBalances=false&PageNumber=1&PageSize=8',
         {
-          statusCode: 400,
+          statusCode: 200,
           fixture: 'dashboard/no-balances.json',
         },
       ).as('getNoBalances');
+      
+      cy.visit('/dashboard');
 
       cy.get('[data-cy=get-test-balances]').should('exist');
     });
@@ -100,6 +86,8 @@ describe('Dashboard', () => {
           fixture: 'dashboard/no-balances.json',
         },
       ).as('getNoBalances');
+
+      cy.visit('/dashboard');
 
       cy.intercept('POST', '/Transaction/TestFund', {
         statusCode: 200,
@@ -119,16 +107,9 @@ describe('Dashboard', () => {
 
       cy.visit('/dashboard');
 
-      cy.intercept(
-        'GET',
-        '/Transaction/Balance?PublicKey=null&FilterZeroBalances=false&PageNumber=1&PageSize=8',
-        {
-          statusCode: 200,
-          fixture: 'dashboard/balances.json',
-        },
-      ).as('getBalances');
+      cy.wait('@getBalances');
 
-      cy.get('[data-cy=balance-card-eth]').should('exist');
+      cy.get('[data-cy=balance-card-xlm]').should('exist');
     });
 
     it('should not display the pagination is there are no balances', () => {
@@ -136,10 +117,12 @@ describe('Dashboard', () => {
         'GET',
         '/Transaction/Balance?PublicKey=null&FilterZeroBalances=false&PageNumber=1&PageSize=8',
         {
-          statusCode: 400,
+          statusCode: 200,
           fixture: 'dashboard/no-balances.json',
         },
       ).as('getNoBalances');
+
+      cy.visit('/dashboard');
 
       cy.get('[data-cy=balances-pagination]').should('not.exist');
     });
@@ -147,15 +130,6 @@ describe('Dashboard', () => {
 
   describe('Filter balances', () => {
     it('should filter balances in zero', () => {
-      cy.intercept(
-        'GET',
-        '/Transaction/Balance?PublicKey=null&FilterZeroBalances=false&PageNumber=1&PageSize=8',
-        {
-          statusCode: 200,
-          fixture: 'dashboard/balances.json',
-        },
-      ).as('getBalances');
-
       cy.intercept(
         'GET',
         '/Transaction/Balance?PublicKey=null&FilterZeroBalances=true&PageNumber=1&PageSize=8',
@@ -173,91 +147,43 @@ describe('Dashboard', () => {
 
   describe('Pagination', () => {
     it('should have a disabled previous button on the first page', () => {
-      cy.intercept(
-        'GET',
-        '/Transaction/Balance?PublicKey=null&FilterZeroBalances=false&PageNumber=1&PageSize=8',
-        {
-          statusCode: 200,
-          fixture: 'dashboard/balances.json',
-        },
-      ).as('getBalances');
-
       cy.get('[data-cy=prev-button]').should('be.disabled');
     });
 
     it('should have an disabled next button on the last page', () => {
-      cy.intercept(
-        'GET',
-        '/Transaction/Balance?PublicKey=null&FilterZeroBalances=false&PageNumber=1&PageSize=8',
-        {
-          statusCode: 200,
-          fixture: 'dashboard/balances.json',
-        },
-      ).as('getBalances');
-
       cy.get('[data-cy=next-button]').should('be.disabled');
     });
 
     it('should display the correct current page and number of pages', () => {
-      cy.intercept(
-        'GET',
-        '/Transaction/Balance?PublicKey=null&FilterZeroBalances=false&PageNumber=1&PageSize=8',
-        {
-          statusCode: 200,
-          fixture: 'dashboard/balances.json',
-        },
-      ).as('getBalances');
-
       cy.get('[data-cy=current-page]').should('have.text', 'Page 1 of 1');
     });
   });
 
   describe('Payment modal', () => {
     it('should display the payment modal', () => {
-      cy.intercept(
-        'GET',
-        '/Transaction/Balance?PublicKey=null&FilterZeroBalances=false&PageNumber=1&PageSize=8',
-        {
-          statusCode: 200,
-          fixture: 'dashboard/balances.json',
-        },
-      ).as('getBalances');
-
-      cy.get('[data-cy=eth-send-payment-button]').click();
+      cy.get('[data-cy=balance-card-eth]').within(() => {
+        cy.get('[data-cy=eth-send-payment-button]').click();
+      });
 
       cy.get('[data-cy=payment-modal-eth]').should('exist');
     });
 
     it('should close the payment modal', () => {
-      cy.intercept(
-        'GET',
-        '/Transaction/Balance?PublicKey=null&FilterZeroBalances=false&PageNumber=1&PageSize=8',
-        {
-          statusCode: 200,
-          fixture: 'dashboard/balances.json',
-        },
-      ).as('getBalances');
-
       cy.get('[data-cy=balance-card-eth]').within(() => {
         cy.get('[data-cy=eth-send-payment-button]').click();
       });
 
-      cy.get('[data-cy=eth-cancel-payment-button]').click();
+      cy.get('[data-cy=payment-modal-eth]').within(() => {
+        cy.get('[data-cy=eth-cancel-payment-button]').click();
+      });
 
       cy.get('[data-cy=payment-modal-eth]').should('not.be.visible');
     });
 
     it('should display the payment form', () => {
-      cy.intercept(
-        'GET',
-        '/Transaction/Balance?PublicKey=null&FilterZeroBalances=false&PageNumber=1&PageSize=8',
-        {
-          statusCode: 200,
-          fixture: 'dashboard/balances.json',
-        },
-      ).as('getBalances');
-
-      cy.get('[data-cy=eth-send-payment-button]').click();
+      cy.get('[data-cy=balance-card-eth]').within(() => {
+        cy.get('[data-cy=eth-send-payment-button]').click();
+      });
 
       cy.get('[data-cy=payment-modal-eth]').within(() => {
         cy.get('[data-cy=destination-public-key]').should('exist');
@@ -269,22 +195,15 @@ describe('Dashboard', () => {
     });
 
     it('should display the payment form errors', () => {
-      cy.intercept(
-        'GET',
-        '/Transaction/Balance?PublicKey=null&FilterZeroBalances=false&PageNumber=1&PageSize=8',
-        {
-          statusCode: 200,
-          fixture: 'dashboard/balances.json',
-        },
-      ).as('getBalances');
-
-      cy.get('[data-cy=eth-send-payment-button]').click();
+      cy.get('[data-cy=balance-card-eth]').within(() => {
+        cy.get('[data-cy=eth-send-payment-button]').click();
+      });
 
       cy.get('[data-cy=payment-modal-eth]').within(() => {
         cy.get('[data-cy=destination-public-key]').type(
           'GAHHHBQRSAMEJW365LQ3FU4WDBVHQNFBY45J5RYVG5OTSRSEARRQHLLK',
         );
-        cy.get('[data-cy=destination-public-key]').clear();
+        cy.get('[data-cy=destination-public-key').clear();
 
         cy.get('[data-cy=amount]').type('0.0001');
         cy.get('[data-cy=amount]').clear();
@@ -306,7 +225,9 @@ describe('Dashboard', () => {
         cy.get('[data-cy=memo]').type('123456');
 
         cy.get('[data-cy=amount]').clear();
-        cy.get('[data-cy=amount]').type('1');
+        cy.get('[data-cy=amount]').type('100');
+        cy.get('[data-cy=memo]').type('1234');
+
         cy.get('[data-cy=amount-error]').should('not.exist');
         cy.get('[data-cy=memo-error]').should('not.exist');
 
@@ -318,15 +239,6 @@ describe('Dashboard', () => {
     });
 
     it('should send a payment', () => {
-      cy.intercept(
-        'GET',
-        '/Transaction/Balance?PublicKey=null&FilterZeroBalances=false&PageNumber=1&PageSize=8',
-        {
-          statusCode: 200,
-          fixture: 'dashboard/balances.json',
-        },
-      ).as('getBalances');
-
       cy.intercept('POST', '/Transaction/Payment', {
         statusCode: 200,
       }).as('sendPayment');

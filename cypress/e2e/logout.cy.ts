@@ -11,7 +11,7 @@ it('should redirect to home page when form is submitted', () => {
 
     cy.intercept(
         'GET',
-        '/Transaction/Balance?PublicKey=null&FilterZeroBalances=false&PageNumber=1&PageSize=4',
+        '/Transaction/Balance?PublicKey=null&FilterZeroBalances=false&PageNumber=1&PageSize=8',
         {
           statusCode: 200,
           fixture: 'dashboard/balances.json',

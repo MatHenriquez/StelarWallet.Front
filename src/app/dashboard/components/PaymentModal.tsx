@@ -4,7 +4,7 @@ import { IPaymentProps } from '../interfaces/payments-props.interface';
 
 const PaymentModal = ({ sendPayment, isSendingPayment, assetName, assetIssuer }: IPaymentProps) => {
   return (
-    <dialog id={`payment-modal-${assetName}`} className='modal modal-bottom sm:modal-middle'>
+    <dialog id={`payment-modal-${assetName}`} className='modal modal-bottom sm:modal-middle' data-cy={`payment-modal-${assetName?.toLowerCase()}`}>
       <div className='modal-box bg-main-blue-900'>
         <h3 className='text-4xl font-bold text-main-blue-200'>Payment</h3>
         <div className='modal-action flex flex-col'>

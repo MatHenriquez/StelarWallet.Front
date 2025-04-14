@@ -14,7 +14,7 @@ interface IUseBalancesProps {
 }
 
 const useBalances = () => {
-  const FIXED_PAGE_SIZE = 4;
+  const FIXED_PAGE_SIZE = 8;
 
   const getBalances = ({
     publicKey,

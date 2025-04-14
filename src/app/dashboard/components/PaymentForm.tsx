@@ -128,7 +128,7 @@ const PaymentForm = ({ sendPayment, isSendingPayment, assetName, assetIssuer }: 
                 <button
                   className={styles.cancelPaymentButton}
                   type='button'
-                  data-cy='cancel-payment-button'
+                  data-cy={`${assetName?.toLowerCase()}-cancel-payment-button`}
                   onClick={handleCancelPayment}
                 >
                   Cancel
